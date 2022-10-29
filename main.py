@@ -1,3 +1,4 @@
+from random import *
 import pygame   
 from OpenGL.GL import *
 import time
@@ -24,11 +25,13 @@ def draw(screen, grid, size):
     h = screen.get_height() / size
     
     for (x, y) in grid:
-        pixel(x* w, y * h, w, h,(255,0,0))
+        if (x*w) > screen.get_width() or (y*h) > screen.get_height():
+            continue
+        pixel(x* w, y * h, w, h,WHITE)
 
     gridTemp = ()
     vecinos = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
-    posiblesVecinos = ()
+    vecinosTemp = ()
 
     for (x, y) in grid:
         vecinosVivos = 0
@@ -37,15 +40,15 @@ def draw(screen, grid, size):
                 vecinosVivos += 1
 
             else:
-                posiblesVecinos = (*posiblesVecinos, (x+i, y+k))
+                vecinosTemp = (*vecinosTemp, (x+i, y+k))
 
         if vecinosVivos == 2 or vecinosVivos == 3:
             gridTemp = (*gridTemp, (x, y))
 
-    posiblesVecinos = list(set(posiblesVecinos))
+    vecinosTemp = list(set(vecinosTemp))
     gridTemp = list(set(gridTemp))
 
-    for (x, y) in posiblesVecinos:
+    for (x, y) in vecinosTemp:
         vecinosVivos = 0
         for (i,k) in vecinos:
             if (x+i, y+k) in grid:
@@ -58,12 +61,109 @@ def draw(screen, grid, size):
 
 
 ###################  GRID  ######################
-grid = [(49,49),(20,20),(20,21),(20,22),(22, 8), (12, 7), (36, 7), (17, 9), (11, 8), (1, 9), (25, 4), (2, 8), (16, 7),
-                                   (25, 10), (21, 6), (23, 9), (14, 6), (36, 6), (22, 7), (14, 12), (17, 8), (11, 10),
-                                   (25, 9), (35, 7), (1, 8), (18, 9), (22, 6), (21, 8), (23, 5), (12, 11), (17, 10),
-                                   (11, 9), (35, 6), (25, 5), (2, 9), (13, 6), (13, 12), (15, 9), (16, 11), (21, 7)]
+pixel_size = 100
 
-pixel_size = 50
+grid = ()
+
+for i in range(80):
+    w = screen.get_width() / pixel_size
+    h = screen.get_height() / pixel_size
+
+    x = randint(0, pixel_size)
+    y = randint(0, pixel_size)
+
+    choice = randint(0, 6)
+
+    if choice == 0: #block
+        grid = (*grid, (x, y))
+        grid = (*grid, (x+1, y+1))
+        grid = (*grid, (x, y+1))
+        grid = (*grid, (x+1, y))
+    
+    elif choice == 1: #blinker
+        grid = (*grid, (x, y))
+        grid = (*grid, (x, y+1))
+        grid = (*grid, (x, y+2))
+
+    elif choice == 2: #spaceship glider
+        grid = (*grid, (x, y))
+        grid = (*grid, (x+1, y))
+        grid = (*grid, (x+2, y+1))
+        grid = (*grid, (x+2, y+3))
+
+    elif choice == 3: #toad
+        grid = (*grid, (x, y))
+        grid = (*grid, (x, y+1))
+        grid = (*grid, (x, y+2))
+        grid = (*grid, (x+1, y+1))
+        grid = (*grid, (x+1, y+2))
+        grid = (*grid, (x+1, y+3))
+
+    elif choice == 4: #beehive
+        grid = (*grid, (x, y+1))
+        grid = (*grid, (x+3, y+1))
+        grid = (*grid, (x+1, y))
+        grid = (*grid, (x+2, y))
+        grid = (*grid, (x+1, y+2))
+        grid = (*grid, (x+2, y+2))
+
+    elif choice == 5: #tub
+        grid = (*grid, (x, y+1))
+        grid = (*grid, (x+2, y+1))
+        grid = (*grid, (x+1, y))
+        grid = (*grid, (x+1, y+2))
+
+    elif choice == 6: #Gosper glider gun
+        grid = (*grid, (x, y+4))
+        grid = (*grid, (x, y+5))
+        grid = (*grid, (x+1, y+4))
+        grid = (*grid, (x+1, y+5))
+
+        grid = (*grid, (x+10, y+3))
+        grid = (*grid, (x+10, y+4))
+        grid = (*grid, (x+10, y+5))
+
+        grid = (*grid, (x+11, y+2))
+        grid = (*grid, (x+11, y+6))
+
+        grid = (*grid, (x+12, y+7))
+        grid = (*grid, (x+12, y+1))
+        grid = (*grid, (x+13, y+7))
+        grid = (*grid, (x+13, y+1))
+
+        grid = (*grid, (x+14, y+4))
+
+        grid = (*grid, (x+15, y+2))
+        grid = (*grid, (x+15, y+6))
+
+
+        grid = (*grid, (x+16, y+3))
+        grid = (*grid, (x+16, y+4))
+        grid = (*grid, (x+16, y+5))
+
+        grid = (*grid, (x+17, y+4))
+
+        grid = (*grid, (x+20, y+5))
+        grid = (*grid, (x+20, y+6))
+        grid = (*grid, (x+20, y+7))
+
+        grid = (*grid, (x+21, y+5))
+        grid = (*grid, (x+21, y+6))
+        grid = (*grid, (x+21, y+7))
+
+        grid = (*grid, (x+22, y+4))
+        grid = (*grid, (x+22, y+8))
+
+        grid = (*grid, (x+24, y+3))
+        grid = (*grid, (x+24, y+4))
+        grid = (*grid, (x+24, y+8))
+        grid = (*grid, (x+24, y+9))
+
+        grid = (*grid, (x+34, y+6))
+        grid = (*grid, (x+34, y+7))
+        grid = (*grid, (x+35, y+6))
+        grid = (*grid, (x+35, y+7))
+
 
 ###################  RAY TRACER  ######################
 running = True
@@ -74,7 +174,7 @@ while running:
     grid = draw(screen, grid, pixel_size)
     pygame.display.flip()
 
-    time.sleep(0.2)
+    time.sleep(0.1)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
